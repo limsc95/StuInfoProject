@@ -28,14 +28,12 @@ public class StudentController {
             {
                 response.put("messageType", "실패");
                 response.put("message", "학생을 선택해야 합니다.");
-                response.put("data", new ArrayList<>()); // 빈 ArrayList 반환
                 return response;
             }
         }
         studentMapper.studentDelete(stu_no);
         response.put("messageType", "성공");
         response.put("message", "성공적으로 삭제 되었습니다.");
-        response.put("data", new ArrayList<>()); // 빈 ArrayList 반환
         return response;
     }
 
@@ -55,13 +53,11 @@ public class StudentController {
         {
             response.put("messageType", "실패");
             response.put("message", "값을 모두 입력해주세요.");
-            response.put("data", new ArrayList<>()); // 빈 ArrayList 반환
             return response;
         }
         studentMapper.update(studentStatus);
         response.put("messageType", "성공");
         response.put("message", "성공적으로 수정 되었습니다.");
-        response.put("data", new ArrayList<>()); // 빈 ArrayList 반환
         return response;
     }
 
@@ -80,13 +76,11 @@ public class StudentController {
         {
             response.put("messageType", "실패");
             response.put("message", "값을 모두 입력해주세요.");
-            response.put("data", new ArrayList<>()); // 빈 ArrayList 반환
             return response;
         }
         studentMapper.insert(studentStatus);
         response.put("messageType", "성공");
         response.put("message", "성공적으로 등록 되었습니다.");
-        response.put("data", new ArrayList<>()); // 빈 ArrayList 반환
         return response;
     }
 
@@ -100,7 +94,6 @@ public class StudentController {
         if (stu_list_name == null || stu_list_name.trim().isEmpty()) {
             response.put("messageType", "실패");
             response.put("message", "검색어를 입력해주세요.");
-            response.put("data", new ArrayList<>()); // 빈 ArrayList 반환
             return response;
         }
 

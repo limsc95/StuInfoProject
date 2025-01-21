@@ -9,8 +9,8 @@ import java.util.List;
 @Mapper
 public interface StudentMapper {
 
-    public List<StudentList> getList(String stu_name);
-    public StudentStatus getInformation(int stu_no);
+    public List<StudentList> getList(String stu_list_name);
+    public StudentStatus getInformation(int stu_list_no);
 
     public void insert(StudentStatus studentStatus);
     public void update(StudentStatus studentStatus);

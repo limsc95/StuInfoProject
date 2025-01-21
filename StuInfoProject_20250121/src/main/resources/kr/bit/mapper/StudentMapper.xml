@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="kr.bit.mapper.StudentMapper">
+    <update id="update" parameterType="kr.bit.entity.StudentStatus">
+        update student_status set stu_name=#{stu_name}, stu_addr=#{stu_addr},
+        stu_school=#{stu_school}, stu_major=#{stu_major}
+        where stu_no=#{stu_no}
+    </update>
+    <insert id="insert" parameterType="kr.bit.entity.StudentStatus">
+        insert into student_status (stu_name,stu_addr,stu_school,stu_major)
+        values (#{stu_name},#{stu_addr},#{stu_school},#{stu_major})
+    </insert>
+    <delete id="studentDelete" parameterType="int">
+        delete from student_status where stu_no=#{stu_no}
+    </delete>
+</mapper>

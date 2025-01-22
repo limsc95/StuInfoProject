@@ -20,174 +20,170 @@
         }
 
         function loadList() {
-
-            let stu_list_name = $("#stu_list_name").val();
-                    console.log(stu_list_name);
+            let stu_list_name = $("#stu_list_name").val().trim();
 
             $.ajax({
                 url: "getList",
                 type: "get",
-                data: {"stu_list_name":stu_list_name},
+                data: { "stu_list_name": stu_list_name },
                 dataType: "json",
-                success: nameList,
-                error:function(request,error){
-                    console.log(request.responseText);
-                    console.log(error);
+                success: function (response) {
+                        nameList(response.data);
+                        $("#messageTypeTitle").text(response.messageType);
+                        $("#messageText").text(response.message);
+                        $("#myMessage").modal("show");
+                },
+                error: function (request, error) {
+                    console.error("Error:", request.responseText);
+                    console.error("Error Type:", error);
                 }
             });
         }
 
         function nameList(data) {
-
             let listHtml = "";
 
             $.each(data, function (index, obj) {
                 listHtml += "<tr>";
-                listHtml += "<td>" + obj.stu_list_no + "</td>";
-                listHtml += "<td id='t'><a href='javascript:infoList("+obj.stu_list_no+")'>" + obj.stu_list_name + "</a></td>";
+                listHtml += "<td>"+obj.stu_list_no+"</td>"
+                listHtml += "<td id='t'><a href='javascript:infoList(" + obj.stu_list_no + ")'>" + obj.stu_list_name + "</a>"
+                listHtml += "</td>";
                 listHtml += "</tr>";
             });
 
             $("#table1").html(listHtml);
-
         }
 
-        function showModal(message, stu_list_name) {
+            function showModal(message, stu_list_name) {
 
-            $('#modalStuName').val(stu_list_name);
+                $('#modalStuName').val(stu_list_name);
 
-            $('#myMessage').modal('show');
-        }
+                $('#myMessage').modal('show');
+            }
 
-        function infoList(stu_list_no) {
+            function infoList(stu_list_no) {
 
-            $.ajax({
-                url: "getInformation",
-                type: "get",
-                data: {"stu_list_no":stu_list_no},
-                dataType: "json",
-                success: function(response) {
-                    // 서버에서 받은 데이터로 input 값 설정
-                    console.log(response); // 서버에서 받은 데이터를 콘솔에 출력
+                $.ajax({
+                    url: "getInformation",
+                    type: "get",
+                    data: {"stu_list_no": stu_list_no},
+                    dataType: "json",
+                    success: function (response) {
+                        // 서버에서 받은 데이터로 input 값 설정
+                        console.log(response); // 서버에서 받은 데이터를 콘솔에 출력
 
-                    // 예시: 서버에서 받은 데이터는 { id: 123, name: "John Doe", status: "Active" } 형태일 것
-                    // 서버 응답을 통해 id 값을 input에 반영
-                    $("#stu_no").val(response.stu_no);  // <input id="stu_id" />에 값 설정
-                    $("#stu_name").val(response.stu_name); // <input id="stu_name" />에 이름 설정
-                    $("#stu_addr").val(response.stu_addr); // <input id="stu_status" />에 상태 설정
-                    $("#stu_school").val(response.stu_school);
-                    $("#stu_major").val(response.stu_major);
-                },
-                error:function(request,error){
-                    console.log(request.responseText);
-                    console.log(error);
+                        // 예시: 서버에서 받은 데이터는 { id: 123, name: "John Doe", status: "Active" } 형태일 것
+                        // 서버 응답을 통해 id 값을 input에 반영
+                        $("#stu_no").val(response.stu_no);  // <input id="stu_id" />에 값 설정
+                        $("#stu_name").val(response.stu_name); // <input id="stu_name" />에 이름 설정
+                        $("#stu_addr").val(response.stu_addr); // <input id="stu_status" />에 상태 설정
+                        $("#stu_school").val(response.stu_school);
+                        $("#stu_major").val(response.stu_major);
+                    },
+                    error: function (request, error) {
+                        console.log(request.responseText);
+                        console.log(error);
                     }
-            });
+                });
 
-        }
-
-        function goToInsert() {
-
-            $("#stu_no").val();
-            $("#stu_name").val($("#modalStuName").val());
-            $("#stu_addr").val();
-            $("#stu_school").val();
-            $("#stu_major").val();
-
-        }
-
-
-        function studentDelete() {
-            let stu_no = $("#stu_no").val(); // 삭제할 학생 번호 가져오기
-
-            if (!stu_no) {
-                alert("삭제할 학생 번호를 입력하세요.");
-                return;
             }
 
-            $.ajax({
-                url: "studentDelete/"+stu_no,
-                type: "delete",
-                data: {"stu_no":stu_no},
-                success: function () {
-                    alert("삭제가 완료되었습니다.");
-                    reset();
-                },
-                error: function (request, error) {
-                    console.log(request.responseText);
-                    console.log(error);
-                    alert("삭제 중 오류가 발생했습니다.");
-                }
-            });
-        }
+            function goToInsert() {
 
-        function studentUpdate() {
-            let stuData = {
-                stu_no: $("#stu_no").val(),
-                stu_name: $("#stu_name").val(),
-                stu_addr: $("#stu_addr").val(),
-                stu_school: $("#stu_school").val(),
-                stu_major: $("#stu_major").val()
-            };
+                $("#stu_no").val();
+                $("#stu_name").val($("#modalStuName").val());
+                $("#stu_addr").val();
+                $("#stu_school").val();
+                $("#stu_major").val();
 
-            if (!stuData.stu_name || !stuData.stu_addr || !stuData.stu_school || !stuData.stu_major) {
-                alert("모든 필드를 입력하세요.");
-                return;
             }
 
-            $.ajax({
-                url: "update",
-                type: "put",
-                contentType: "application/json",
-                data: JSON.stringify(stuData),
-                success: function () {
-                     alert("수정이 완료되었습니다.");
-                     reset(); // 입력 필드 초기화
-                 },
-                error: function (request, error) {
-                    console.log(request.responseText);
-                    console.log(error);
+
+            function studentDelete() {
+                let stu_no = $("#stu_no").val(); // 삭제할 학생 번호 가져오기
+
+                if (!stu_no) {
+                    stu_no=0;
                 }
-            });
-        }
-
-        function studentInsert() {
-            let stuData = {
-                stu_name: $("#stu_name").val(),
-                stu_addr: $("#stu_addr").val(),
-                stu_school: $("#stu_school").val(),
-                stu_major: $("#stu_major").val()
-            };
-
-            if (!stuData.stu_name || !stuData.stu_addr || !stuData.stu_school || !stuData.stu_major) {
-                alert("모든 필드를 입력하세요.");
-                return;
+                $.ajax({
+                    url: "studentDelete/" + stu_no,
+                    type: "delete",
+                    data: {"stu_no": stu_no},
+                    success: function (response) {
+                        $("#messageTypeTitle").text(response.messageType);
+                        $("#messageText").text(response.message);
+                        $("#myMessage").modal("show");
+                        reset(); // 입력 필드 초기화
+                    },
+                    error: function (request, error) {
+                        console.log(request.responseText);
+                        console.log(error);
+                    }
+                });
             }
 
-            $.ajax({
-                url: "insert", // 서버에서 처리할 경로
-                type: "post", // HTTP 메서드
-                contentType: "application/json", // JSON 데이터 전송
-                data: JSON.stringify(stuData), // 데이터를 JSON 문자열로 변환
-                success: function () {
-                    alert("등록이 완료되었습니다.");
-                    reset(); // 입력 필드 초기화
-                },
-                error: function (request, error) {
-                    console.log(request.responseText);
-                    console.log(error);
-                    alert("등록 중 오류가 발생했습니다.");
-                }
-            });
-        }
+            function studentUpdate() {
+                let stuData = {
+                    stu_no: $("#stu_no").val(),
+                    stu_name: $("#stu_name").val(),
+                    stu_addr: $("#stu_addr").val(),
+                    stu_school: $("#stu_school").val(),
+                    stu_major: $("#stu_major").val()
+                };
 
-        function reset(){
-            $("#stu_no").val("");
-            $("#stu_name").val("");
-            $("#stu_addr").val("");
-            $("#stu_school").val("");
-            $("#stu_major").val("");
-        }
+
+                $.ajax({
+                    url: "update",
+                    type: "put",
+                    contentType: "application/json",
+                    data: JSON.stringify(stuData),
+                    success: function (response) {
+                        $("#messageTypeTitle").text(response.messageType);
+                        $("#messageText").text(response.message);
+                        $("#myMessage").modal("show");
+                        reset(); // 입력 필드 초기화
+                    },
+                    error: function (request, error) {
+                        console.log(request.responseText);
+                        console.log(error);
+                    }
+                });
+            }
+
+            function studentInsert() {
+                let stuData = {
+                    stu_name: $("#stu_name").val(),
+                    stu_addr: $("#stu_addr").val(),
+                    stu_school: $("#stu_school").val(),
+                    stu_major: $("#stu_major").val()
+                };
+
+
+                $.ajax({
+                    url: "insert", // 서버에서 처리할 경로
+                    type: "post", // HTTP 메서드
+                    contentType: "application/json", // JSON 데이터 전송
+                    data: JSON.stringify(stuData), // 데이터를 JSON 문자열로 변환
+                    success: function (response) {
+                        $("#messageTypeTitle").text(response.messageType);
+                        $("#messageText").text(response.message);
+                        $("#myMessage").modal("show");
+                        reset(); // 입력 필드 초기화
+                    },
+                    error: function (request, error) {
+                        console.log(request.responseText);
+                        console.log(error);
+                    }
+                });
+            }
+
+            function reset() {
+                $("#stu_no").val("");
+                $("#stu_name").val("");
+                $("#stu_addr").val("");
+                $("#stu_school").val("");
+                $("#stu_major").val("");
+            }
 
     </script>
 
@@ -264,21 +260,23 @@
                 </div>
             </div>
         </div>
-        <div id="myMessage" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">${messageType}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="message">${message}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
-                    </div>
+
+    <div id="myMessage" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- messageType을 동적으로 변경 -->
+                    <h5 class="modal-title" id="messageTypeTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- message를 동적으로 변경 -->
+                    <p id="messageText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
